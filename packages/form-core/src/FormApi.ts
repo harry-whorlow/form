@@ -201,7 +201,7 @@ export interface FormOptions<
    */
   onSubmitMeta?: TFormSubmitMeta
 
-  transform?: FormTransform<TFormData, TFormValidator>
+  transform?: FormTransform<TFormData, TFormValidator, TFormSubmitMeta>
 }
 
 /**
@@ -646,7 +646,9 @@ export class FormApi<
       ) as never
     }
 
-    return (props.validate as FormValidateFn<any, any>)(props.value) as never
+    return (props.validate as FormValidateFn<any, any>)(
+      props.value as any,
+    ) as never
   }
 
   mount = () => {
@@ -1120,18 +1122,12 @@ export class FormApi<
 
     try {
       // Run the submit code
-      if (submitMeta !== undefined) {
-        await this.options.onSubmit?.({
-          value: this.state.values,
-          formApi: this,
-          meta: submitMeta,
-        })
-      } else {
-        await this.options.onSubmit?.({
-          value: this.state.values,
-          formApi: this,
-        })
-      }
+
+      await this.options.onSubmit?.({
+        value: this.state.values,
+        formApi: this,
+        ...(submitMeta ? { meta: submitMeta } : {}),
+      } as any)
 
       batch(() => {
         this.baseStore.setState((prev) => ({ ...prev, isSubmitted: true }))
