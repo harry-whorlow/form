@@ -3,9 +3,9 @@ id: VueFieldApi
 title: VueFieldApi
 ---
 
-# Interface: VueFieldApi\<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer\>
+# Interface: VueFieldApi\<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer, TParentSubmitMeta\>
 
-Defined in: [packages/vue-form/src/useField.tsx:159](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useField.tsx#L159)
+Defined in: [packages/vue-form/src/useField.tsx:164](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useField.tsx#L164)
 
 ## Type Parameters
 
@@ -27,12 +27,14 @@ Defined in: [packages/vue-form/src/useField.tsx:159](https://github.com/TanStack
 
 • **TFormOnServer** *extends* `undefined` \| `FormAsyncValidateOrFn`\<`TParentData`\>
 
+• **TParentSubmitMeta**
+
 ## Properties
 
 ### Field
 
 ```ts
-Field: FieldComponent<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer>;
+Field: FieldComponent<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer, TParentSubmitMeta>;
 ```
 
-Defined in: [packages/vue-form/src/useField.tsx:170](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useField.tsx#L170)
+Defined in: [packages/vue-form/src/useField.tsx:176](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useField.tsx#L176)

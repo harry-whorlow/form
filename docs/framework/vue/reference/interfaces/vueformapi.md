@@ -3,7 +3,7 @@ id: VueFormApi
 title: VueFormApi
 ---
 
-# Interface: VueFormApi\<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer\>
+# Interface: VueFormApi\<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer, TSubmitMeta\>
 
 Defined in: [packages/vue-form/src/useForm.tsx:115](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L115)
 
@@ -27,15 +27,17 @@ Defined in: [packages/vue-form/src/useForm.tsx:115](https://github.com/TanStack/
 
 • **TFormOnServer** *extends* `undefined` \| `FormAsyncValidateOrFn`\<`TParentData`\>
 
+• **TSubmitMeta**
+
 ## Properties
 
 ### Field
 
 ```ts
-Field: FieldComponent<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer>;
+Field: FieldComponent<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer, TSubmitMeta>;
 ```
 
-Defined in: [packages/vue-form/src/useForm.tsx:126](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L126)
+Defined in: [packages/vue-form/src/useForm.tsx:127](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L127)
 
 ***
 
@@ -45,17 +47,17 @@ Defined in: [packages/vue-form/src/useForm.tsx:126](https://github.com/TanStack/
 Subscribe: SubscribeComponent<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer>;
 ```
 
-Defined in: [packages/vue-form/src/useForm.tsx:179](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L179)
+Defined in: [packages/vue-form/src/useForm.tsx:182](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L182)
 
 ***
 
 ### useField
 
 ```ts
-useField: UseField<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer>;
+useField: UseField<TParentData, TFormOnMount, TFormOnChange, TFormOnChangeAsync, TFormOnBlur, TFormOnBlurAsync, TFormOnSubmit, TFormOnSubmitAsync, TFormOnServer, TSubmitMeta>;
 ```
 
-Defined in: [packages/vue-form/src/useForm.tsx:137](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L137)
+Defined in: [packages/vue-form/src/useForm.tsx:139](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L139)
 
 ***
 
@@ -65,7 +67,7 @@ Defined in: [packages/vue-form/src/useForm.tsx:137](https://github.com/TanStack/
 useStore: <TSelected>(selector?) => Readonly<Ref<TSelected, TSelected>>;
 ```
 
-Defined in: [packages/vue-form/src/useForm.tsx:148](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L148)
+Defined in: [packages/vue-form/src/useForm.tsx:151](https://github.com/TanStack/form/blob/main/packages/vue-form/src/useForm.tsx#L151)
 
 #### Type Parameters
 

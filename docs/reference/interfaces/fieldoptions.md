@@ -5,7 +5,7 @@ title: FieldOptions
 
 # Interface: FieldOptions\<TParentData, TName, TData, TOnMount, TOnChange, TOnChangeAsync, TOnBlur, TOnBlurAsync, TOnSubmit, TOnSubmitAsync\>
 
-Defined in: [packages/form-core/src/FieldApi.ts:337](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L337)
+Defined in: [packages/form-core/src/FieldApi.ts:340](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L340)
 
 An object type representing the options for a field in a form.
 
@@ -43,7 +43,7 @@ An object type representing the options for a field in a form.
 optional asyncAlways: boolean;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:370](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L370)
+Defined in: [packages/form-core/src/FieldApi.ts:373](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L373)
 
 If `true`, always run async validation, even if there are errors emitted during synchronous validation.
 
@@ -55,7 +55,7 @@ If `true`, always run async validation, even if there are errors emitted during 
 optional asyncDebounceMs: number;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:366](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L366)
+Defined in: [packages/form-core/src/FieldApi.ts:369](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L369)
 
 The default time to debounce async validation if there is not a more specific debounce time passed.
 
@@ -67,7 +67,7 @@ The default time to debounce async validation if there is not a more specific de
 optional defaultMeta: Partial<FieldMeta<TParentData, TName, TData, TOnMount, TOnChange, TOnChangeAsync, TOnBlur, TOnBlurAsync, TOnSubmit, TOnSubmitAsync, any, any, any, any, any, any, any>>;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:389](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L389)
+Defined in: [packages/form-core/src/FieldApi.ts:392](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L392)
 
 An optional object with default metadata for the field.
 
@@ -79,7 +79,7 @@ An optional object with default metadata for the field.
 optional defaultValue: NoInfer<TData>;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:362](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L362)
+Defined in: [packages/form-core/src/FieldApi.ts:365](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L365)
 
 An optional default value for the field.
 
@@ -91,7 +91,7 @@ An optional default value for the field.
 optional disableErrorFlat: boolean;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:417](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L417)
+Defined in: [packages/form-core/src/FieldApi.ts:420](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L420)
 
 Disable the `flat(1)` operation on `field.errors`. This is useful if you want to keep the error structure as is. Not suggested for most use-cases.
 
@@ -103,7 +103,7 @@ Disable the `flat(1)` operation on `field.errors`. This is useful if you want to
 optional listeners: FieldListeners<TParentData, TName, TData>;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:413](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L413)
+Defined in: [packages/form-core/src/FieldApi.ts:416](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L416)
 
 A list of listeners which attach to the corresponding events
 
@@ -115,7 +115,7 @@ A list of listeners which attach to the corresponding events
 name: TName;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:358](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L358)
+Defined in: [packages/form-core/src/FieldApi.ts:361](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L361)
 
 The field name. The type will be `DeepKeys<TParentData>` to ensure your name is a deep key of the parent dataset.
 
@@ -127,6 +127,6 @@ The field name. The type will be `DeepKeys<TParentData>` to ensure your name is 
 optional validators: FieldValidators<TParentData, TName, TData, TOnMount, TOnChange, TOnChangeAsync, TOnBlur, TOnBlurAsync, TOnSubmit, TOnSubmitAsync>;
 ```
 
-Defined in: [packages/form-core/src/FieldApi.ts:374](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L374)
+Defined in: [packages/form-core/src/FieldApi.ts:377](https://github.com/TanStack/form/blob/main/packages/form-core/src/FieldApi.ts#L377)
 
 A list of validators to pass to the field
