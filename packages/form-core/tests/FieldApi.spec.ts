@@ -2500,4 +2500,25 @@ describe('field api', () => {
 
     expect(field.state.meta.errors).toStrictEqual(['Blur error'])
   })
+
+  it('should update custom meta', () => {
+    const form = new FormApi({
+      defaultValues: { test: '' },
+      customMeta: { disabled: false },
+    })
+    form.mount()
+
+    const field = new FieldApi({
+      form,
+      name: 'test',
+      listeners: {
+        onChange: ({ value, fieldApi }) =>
+          fieldApi.setMeta((prev) => ({ ...prev, disabled: !!value })),
+      },
+    })
+    field.mount()
+
+    field.handleChange('enabled')
+    expect(field.state.meta.disabled).toBe(true)
+  })
 })

@@ -100,6 +100,7 @@ export type FieldValidateFn<
     any,
     any,
     any,
+    any,
     any
   >
 }) => unknown
@@ -183,6 +184,7 @@ export type FieldValidateAsyncFn<
     any,
     any,
     any,
+    any,
     any
   >
   signal: AbortSignal
@@ -241,6 +243,7 @@ export type UnwrapFieldAsyncValidateOrFn<
 export type FieldListenerFn<
   TParentData,
   TName extends DeepKeys<TParentData>,
+  TCustomMeta extends object = {},
   TData extends DeepValue<TParentData, TName> = DeepValue<TParentData, TName>,
 > = (props: {
   value: TData
@@ -265,7 +268,8 @@ export type FieldListenerFn<
     any,
     any,
     any,
-    any
+    any,
+    TCustomMeta
   >
 }) => void
 
@@ -353,14 +357,15 @@ export interface FieldValidators<
 export interface FieldListeners<
   TParentData,
   TName extends DeepKeys<TParentData>,
+  TCustomMeta extends object = {},
   TData extends DeepValue<TParentData, TName> = DeepValue<TParentData, TName>,
 > {
-  onChange?: FieldListenerFn<TParentData, TName, TData>
+  onChange?: FieldListenerFn<TParentData, TName, TCustomMeta, TData>
   onChangeDebounceMs?: number
-  onBlur?: FieldListenerFn<TParentData, TName, TData>
+  onBlur?: FieldListenerFn<TParentData, TName, TCustomMeta, TData>
   onBlurDebounceMs?: number
-  onMount?: FieldListenerFn<TParentData, TName, TData>
-  onSubmit?: FieldListenerFn<TParentData, TName, TData>
+  onMount?: FieldListenerFn<TParentData, TName, TCustomMeta, TData>
+  onSubmit?: FieldListenerFn<TParentData, TName, TCustomMeta, TData>
 }
 
 /**
@@ -383,6 +388,7 @@ export interface FieldOptions<
   TOnSubmitAsync extends
     | undefined
     | FieldAsyncValidateOrFn<TParentData, TName, TData>,
+  TCustomMeta extends object = {},
 > {
   /**
    * The field name. The type will be `DeepKeys<TParentData>` to ensure your name is a deep key of the parent dataset.
@@ -436,13 +442,14 @@ export interface FieldOptions<
       any,
       any,
       any,
-      any
+      any,
+      TCustomMeta
     >
   >
   /**
    * A list of listeners which attach to the corresponding events
    */
-  listeners?: FieldListeners<TParentData, TName, TData>
+  listeners?: FieldListeners<TParentData, TName, TCustomMeta, TData>
   /**
    * Disable the `flat(1)` operation on `field.errors`. This is useful if you want to keep the error structure as is. Not suggested for most use-cases.
    */
@@ -492,6 +499,7 @@ export interface FieldApiOptions<
     | FormAsyncValidateOrFn<TParentData>,
   in out TFormOnServer extends undefined | FormAsyncValidateOrFn<TParentData>,
   in out TParentSubmitMeta,
+  in out TCustomMeta extends object = {},
 > extends FieldOptions<
     TParentData,
     TName,
@@ -502,7 +510,8 @@ export interface FieldApiOptions<
     TOnBlur,
     TOnBlurAsync,
     TOnSubmit,
-    TOnSubmitAsync
+    TOnSubmitAsync,
+    TCustomMeta
   > {
   form: FormApi<
     TParentData,
@@ -514,7 +523,8 @@ export interface FieldApiOptions<
     TFormOnSubmit,
     TFormOnSubmitAsync,
     TFormOnServer,
-    TParentSubmitMeta
+    TParentSubmitMeta,
+    TCustomMeta
   >
 }
 
@@ -542,6 +552,7 @@ export type FieldMetaBase<
   TFormOnBlurAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
   TFormOnSubmit extends undefined | FormValidateOrFn<TParentData>,
   TFormOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
+  TCustomMeta extends object = {},
 > = {
   /**
    * A flag indicating whether the field has been touched.
@@ -575,7 +586,7 @@ export type FieldMetaBase<
    * A flag indicating whether the field is currently being validated.
    */
   isValidating: boolean
-}
+} & TCustomMeta
 
 export type AnyFieldMetaBase = FieldMetaBase<
   any,
@@ -709,6 +720,7 @@ export type FieldMeta<
   TFormOnBlurAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
   TFormOnSubmit extends undefined | FormValidateOrFn<TParentData>,
   TFormOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
+  TCustomMeta extends object = {},
 > = FieldMetaBase<
   TParentData,
   TName,
@@ -726,7 +738,8 @@ export type FieldMeta<
   TFormOnBlur,
   TFormOnBlurAsync,
   TFormOnSubmit,
-  TFormOnSubmitAsync
+  TFormOnSubmitAsync,
+  TCustomMeta
 > &
   FieldMetaDerived<
     TParentData,
@@ -749,6 +762,7 @@ export type FieldMeta<
   >
 
 export type AnyFieldMeta = FieldMeta<
+  any,
   any,
   any,
   any,
@@ -795,6 +809,7 @@ export type FieldState<
   TFormOnBlurAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
   TFormOnSubmit extends undefined | FormValidateOrFn<TParentData>,
   TFormOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TParentData>,
+  TCustomMeta extends object = {},
 > = {
   /**
    * The current value of the field.
@@ -820,7 +835,8 @@ export type FieldState<
     TFormOnBlur,
     TFormOnBlurAsync,
     TFormOnSubmit,
-    TFormOnSubmitAsync
+    TFormOnSubmitAsync,
+    TCustomMeta
   >
 }
 
@@ -830,6 +846,7 @@ export type FieldState<
  * A type representing the Field API with all generics set to `any` for convenience.
  */
 export type AnyFieldApi = FieldApi<
+  any,
   any,
   any,
   any,
@@ -900,6 +917,7 @@ export class FieldApi<
     | FormAsyncValidateOrFn<TParentData>,
   in out TFormOnServer extends undefined | FormAsyncValidateOrFn<TParentData>,
   in out TParentSubmitMeta,
+  in out TCustomMeta extends object = {},
 > {
   /**
    * A reference to the form API instance.
@@ -923,7 +941,8 @@ export class FieldApi<
     TFormOnSubmit,
     TFormOnSubmitAsync,
     TFormOnServer,
-    TParentSubmitMeta
+    TParentSubmitMeta,
+    TCustomMeta
   >['form']
   /**
    * The field name.
@@ -951,7 +970,8 @@ export class FieldApi<
     TFormOnSubmit,
     TFormOnSubmitAsync,
     TFormOnServer,
-    TParentSubmitMeta
+    TParentSubmitMeta,
+    TCustomMeta
   > = {} as any
   /**
    * The field state store.
@@ -974,7 +994,8 @@ export class FieldApi<
       TFormOnBlur,
       TFormOnBlurAsync,
       TFormOnSubmit,
-      TFormOnSubmitAsync
+      TFormOnSubmitAsync,
+      TCustomMeta
     >
   >
   /**
@@ -1012,7 +1033,8 @@ export class FieldApi<
       TFormOnSubmit,
       TFormOnSubmitAsync,
       TFormOnServer,
-      TParentSubmitMeta
+      TParentSubmitMeta,
+      TCustomMeta
     >,
   ) {
     this.form = opts.form as never
@@ -1052,7 +1074,8 @@ export class FieldApi<
           TFormOnBlur,
           TFormOnBlurAsync,
           TFormOnSubmit,
-          TFormOnSubmitAsync
+          TFormOnSubmitAsync,
+          TCustomMeta
         >
       },
     })
@@ -1162,7 +1185,8 @@ export class FieldApi<
       TFormOnSubmit,
       TFormOnSubmitAsync,
       TFormOnServer,
-      TParentSubmitMeta
+      TParentSubmitMeta,
+      TCustomMeta
     >,
   ) => {
     this.options = opts as never
@@ -1238,10 +1262,11 @@ export class FieldApi<
         TFormOnBlur,
         TFormOnBlurAsync,
         TFormOnSubmit,
-        TFormOnSubmitAsync
+        TFormOnSubmitAsync,
+        TCustomMeta
       >
     >,
-  ) => this.form.setFieldMeta(this.name, updater)
+  ) => this.form.setFieldMeta(this.name, updater as AnyFieldMeta)
 
   /**
    * Gets the field information object.
@@ -1326,7 +1351,10 @@ export class FieldApi<
    * @private
    */
   getLinkedFields = (cause: ValidationCause) => {
-    const fields = Object.values(this.form.fieldInfo) as FieldInfo<any>[]
+    const fields = Object.values(this.form.fieldInfo) as FieldInfo<
+      any,
+      TCustomMeta
+    >[]
 
     const linkedFields: AnyFieldApi[] = []
     for (const field of fields) {
@@ -1403,7 +1431,7 @@ export class FieldApi<
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (field.state.meta.errorMap?.[errorMapKey] !== newErrorValue) {
-          field.setMeta((prev) => ({
+          field.setMeta((prev: AnyFieldMetaBase) => ({
             ...prev,
             errorMap: {
               ...prev.errorMap,
@@ -1503,7 +1531,10 @@ export class FieldApi<
     }
 
     for (const linkedField of linkedFields) {
-      linkedField.setMeta((prev) => ({ ...prev, isValidating: true }))
+      linkedField.setMeta((prev: AnyFieldMetaBase) => ({
+        ...prev,
+        isValidating: true,
+      }))
     }
 
     /**
@@ -1575,7 +1606,7 @@ export class FieldApi<
               fieldLevelError,
             })
 
-          field.setMeta((prev) => {
+          field.setMeta((prev: AnyFieldMetaBase) => {
             return {
               ...prev,
               errorMap: {
@@ -1618,7 +1649,10 @@ export class FieldApi<
     this.setMeta((prev) => ({ ...prev, isValidating: false }))
 
     for (const linkedField of linkedFields) {
-      linkedField.setMeta((prev) => ({ ...prev, isValidating: false }))
+      linkedField.setMeta((prev: AnyFieldMetaBase) => ({
+        ...prev,
+        isValidating: false,
+      }))
     }
 
     return results.filter(Boolean)

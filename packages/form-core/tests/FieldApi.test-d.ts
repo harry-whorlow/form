@@ -458,3 +458,28 @@ it('should allow setting manual errors with standard schema validators on the fi
     onServer: unknown
   }>
 })
+
+it('should infer custom meta to the field', () => {
+  const form = new FormApi({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+    },
+    customMeta: { one: '', obj: { anotherOne: '' } },
+  })
+
+  const field = new FieldApi({
+    form,
+    name: 'firstName',
+    validators: {
+      onChange: () => 10 as const,
+      onBlur: () => ['onBlur'] as const,
+    },
+  })
+
+  expectTypeOf(field.state.meta).toHaveProperty<'one'>
+
+  expectTypeOf(field.state.meta.obj).toEqualTypeOf<{
+    anotherOne: string
+  }>
+})

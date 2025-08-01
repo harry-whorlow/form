@@ -209,6 +209,7 @@ export interface FormTransform<
   TOnSubmit extends undefined | FormValidateOrFn<TFormData>,
   TOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TFormData>,
   TOnServer extends undefined | FormAsyncValidateOrFn<TFormData>,
+  TCustomMeta extends object = {},
   TSubmitMeta = never,
 > {
   fn: (
@@ -222,7 +223,8 @@ export interface FormTransform<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >,
   ) => FormApi<
     TFormData,
@@ -234,7 +236,8 @@ export interface FormTransform<
     TOnSubmit,
     TOnSubmitAsync,
     TOnServer,
-    TSubmitMeta
+    TSubmitMeta,
+    TCustomMeta
   >
   deps: unknown[]
 }
@@ -249,6 +252,7 @@ export interface FormListeners<
   TOnSubmit extends undefined | FormValidateOrFn<TFormData>,
   TOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TFormData>,
   TOnServer extends undefined | FormAsyncValidateOrFn<TFormData>,
+  TCustomMeta extends object = {},
   TSubmitMeta = never,
 > {
   onChange?: (props: {
@@ -262,7 +266,8 @@ export interface FormListeners<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
     fieldApi: AnyFieldApi
   }) => void
@@ -279,7 +284,8 @@ export interface FormListeners<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
     fieldApi: AnyFieldApi
   }) => void
@@ -296,7 +302,8 @@ export interface FormListeners<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
   }) => void
 
@@ -311,7 +318,8 @@ export interface FormListeners<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
   }) => void
 }
@@ -329,6 +337,7 @@ export interface FormOptions<
   in out TOnSubmit extends undefined | FormValidateOrFn<TFormData>,
   in out TOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TFormData>,
   in out TOnServer extends undefined | FormAsyncValidateOrFn<TFormData>,
+  in out TCustomMeta extends object = {},
   in out TSubmitMeta = never,
 > {
   /**
@@ -378,6 +387,11 @@ export interface FormOptions<
   >
 
   /**
+  / custom meta applied to all fields
+  / */
+  customMeta?: TCustomMeta
+
+  /**
    * onSubmitMeta, the data passed from the handleSubmit handler, to the onSubmit function props
    */
   onSubmitMeta?: TSubmitMeta
@@ -395,6 +409,7 @@ export interface FormOptions<
     TOnSubmit,
     TOnSubmitAsync,
     TOnServer,
+    TCustomMeta,
     TSubmitMeta
   >
 
@@ -413,7 +428,8 @@ export interface FormOptions<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
     meta: TSubmitMeta
   }) => any | Promise<any>
@@ -432,7 +448,8 @@ export interface FormOptions<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
-      TSubmitMeta
+      TSubmitMeta,
+      TCustomMeta
     >
   }) => void
   transform?: FormTransform<
@@ -445,6 +462,7 @@ export interface FormOptions<
     NoInfer<TOnSubmit>,
     NoInfer<TOnSubmitAsync>,
     NoInfer<TOnServer>,
+    NoInfer<TCustomMeta>,
     NoInfer<TSubmitMeta>
   >
 }
@@ -462,7 +480,7 @@ export type ValidationMeta = {
 /**
  * An object representing the field information for a specific field within the form.
  */
-export type FieldInfo<TFormData> = {
+export type FieldInfo<TFormData, TCustomMeta extends object = {}> = {
   /**
    * An instance of the FieldAPI.
    */
@@ -485,7 +503,8 @@ export type FieldInfo<TFormData> = {
     any,
     any,
     any,
-    any
+    any,
+    TCustomMeta
   > | null
   /**
    * A record of field validation internal handling.
@@ -759,6 +778,7 @@ export type AnyFormApi = FormApi<
   any,
   any,
   any,
+  any,
   any
 >
 
@@ -780,6 +800,7 @@ export class FormApi<
   in out TOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TFormData>,
   in out TOnServer extends undefined | FormAsyncValidateOrFn<TFormData>,
   in out TSubmitMeta = never,
+  in out TCustomMeta extends object = {},
 > {
   /**
    * The options for the form.
@@ -794,6 +815,7 @@ export class FormApi<
     TOnSubmit,
     TOnSubmitAsync,
     TOnServer,
+    TCustomMeta,
     TSubmitMeta
   > = {}
   baseStore!: Store<
@@ -851,6 +873,7 @@ export class FormApi<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
+      TCustomMeta,
       TSubmitMeta
     >,
   ) {
@@ -1197,6 +1220,7 @@ export class FormApi<
       TOnSubmit,
       TOnSubmitAsync,
       TOnServer,
+      TCustomMeta,
       TSubmitMeta
     >,
   ) => {
@@ -1283,24 +1307,27 @@ export class FormApi<
   validateAllFields = async (cause: ValidationCause) => {
     const fieldValidationPromises: Promise<ValidationError[]>[] = [] as any
     batch(() => {
-      void (Object.values(this.fieldInfo) as FieldInfo<any>[]).forEach(
-        (field) => {
-          if (!field.instance) return
-          const fieldInstance = field.instance
-          // Validate the field
-          fieldValidationPromises.push(
-            // Remember, `validate` is either a sync operation or a promise
-            Promise.resolve().then(() =>
-              fieldInstance.validate(cause, { skipFormValidation: true }),
-            ),
-          )
-          // If any fields are not touched
-          if (!field.instance.state.meta.isTouched) {
-            // Mark them as touched
-            field.instance.setMeta((prev) => ({ ...prev, isTouched: true }))
-          }
-        },
-      )
+      void (
+        Object.values(this.fieldInfo) as FieldInfo<any, TCustomMeta>[]
+      ).forEach((field) => {
+        if (!field.instance) return
+        const fieldInstance = field.instance
+        // Validate the field
+        fieldValidationPromises.push(
+          // Remember, `validate` is either a sync operation or a promise
+          Promise.resolve().then(() =>
+            fieldInstance.validate(cause, { skipFormValidation: true }),
+          ),
+        )
+        // If any fields are not touched
+        if (!field.instance.state.meta.isTouched) {
+          // Mark them as touched
+          field.instance.setMeta((prev) => ({
+            ...prev,
+            isTouched: true,
+          }))
+        }
+      })
     })
 
     const fieldErrorMapMap = await Promise.all(fieldValidationPromises)

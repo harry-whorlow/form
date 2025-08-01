@@ -32,6 +32,7 @@ export function metaHelper<
   TOnSubmitAsync extends undefined | FormAsyncValidateOrFn<TFormData>,
   TOnServer extends undefined | FormAsyncValidateOrFn<TFormData>,
   TSubmitMeta,
+  TCustomMeta extends object = {},
 >(
   formApi: FormApi<
     TFormData,
@@ -43,7 +44,8 @@ export function metaHelper<
     TOnSubmit,
     TOnSubmitAsync,
     TOnServer,
-    TSubmitMeta
+    TSubmitMeta,
+    TCustomMeta
   >,
 ) {
   function handleArrayFieldMetaShift(
