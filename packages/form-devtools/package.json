@@ -1,13 +1,13 @@
 {
-  "name": "@tanstack/form-core",
-  "version": "1.19.3",
-  "description": "Powerful, type-safe, framework agnostic forms.",
+  "name": "@tanstack/form-devtools",
+  "version": "1.17.0",
+  "description": "Powerful, type-safe forms for Solid.",
   "author": "tannerlinsley",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TanStack/form.git",
-    "directory": "packages/form-core"
+    "directory": "packages/form-devtools"
   },
   "homepage": "https://tanstack.com/form",
   "funding": {
@@ -26,7 +26,7 @@
     "test:lib": "vitest",
     "test:lib:dev": "pnpm run test:lib --watch",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "vite build && tsc -p tsconfig.build.json"
   },
   "type": "module",
   "types": "dist/esm/index.d.ts",
@@ -34,6 +34,10 @@
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
+      "solid": {
+        "types": "./dist/source/index.d.ts",
+        "default": "./dist/source/index.jsx"
+      },
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
@@ -51,12 +55,19 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/store": "^0.7.4",
-    "@tanstack/devtools-event-client": "^0.2.2"
+    "@tanstack/solid-store": "^0.7.3",
+    "@tanstack/form-core": "workspace:*",
+    "@tanstack/devtools-ui": "^0.3.1",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "goober": "^2.1.16"
   },
   "devDependencies": {
-    "arktype": "^2.1.20",
-    "valibot": "^1.1.0",
-    "zod": "^3.25.76"
+    "solid-js": "^1.9.7",
+    "vite": "^7.0.6",
+    "vite-plugin-solid": "^2.11.6"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.6.0"
   }
 }

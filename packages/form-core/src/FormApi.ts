@@ -18,6 +18,12 @@ import {
   standardSchemaValidators,
 } from './standardSchemaValidator'
 import { defaultFieldMeta, metaHelper } from './metaHelper'
+import { formEventClient } from './EventClient'
+import type {
+  RequestFormForceReset,
+  RequestFormReset,
+  RequestFormState,
+} from './EventClient'
 import type { ValidationLogicFn } from './ValidationLogic'
 import type {
   StandardSchemaV1,
@@ -508,6 +514,21 @@ export interface FormOptions<
   >
 }
 
+export type AnyFormOptions = FormOptions<
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any
+>
+
 /**
  * An object representing the validation metadata for a field. Not intended for public usage.
  */
@@ -935,6 +956,15 @@ export class FormApi<
   prevTransformArray: unknown[] = []
 
   /**
+   * @private
+   */
+  private _formId: string
+  /**
+   * @private
+   */
+  private _devtoolsSubmissionOverride: boolean
+
+  /**
    * Constructs a new `FormApi` instance with the given form options.
    */
   constructor(
@@ -953,6 +983,10 @@ export class FormApi<
       TSubmitMeta
     >,
   ) {
+    this._formId = opts?.formId ?? crypto.randomUUID()
+
+    this._devtoolsSubmissionOverride = false
+
     this.baseStore = new Store(
       getDefaultFormState({
         ...(opts?.defaultState as any),
@@ -1244,10 +1278,48 @@ export class FormApi<
     this.handleSubmit = this.handleSubmit.bind(this)
 
     this.update(opts || {})
+
+    this.store.subscribe(() => {
+      formEventClient.emit('broadcast-form-state', {
+        id: this._formId,
+        state: this.store.state,
+        options: this.options,
+      })
+    })
+
+    formEventClient.on('request-form-state', (_e) => {
+      const e = _e.payload as unknown as RequestFormState
+
+      if (e.id === this._formId) {
+        formEventClient.emit('broadcast-form-state', {
+          id: this._formId,
+          state: this.store.state,
+          options: this.options,
+        })
+      }
+    })
+
+    formEventClient.on('request-form-reset', (_e) => {
+      const e = _e.payload as unknown as RequestFormReset
+
+      if (e.id === this._formId) {
+        this.reset()
+      }
+    })
+
+    formEventClient.on('request-form-force-submit', (_e) => {
+      const e = _e.payload as unknown as RequestFormForceReset
+
+      if (e.id === this._formId) {
+        this._devtoolsSubmissionOverride = true
+        this.handleSubmit()
+        this._devtoolsSubmissionOverride = false
+      }
+    })
   }
 
-  get formId(): string | undefined {
-    return this.options.formId
+  formId(): string | undefined {
+    return this._formId
   }
 
   /**
@@ -1281,14 +1353,29 @@ export class FormApi<
     const cleanup = () => {
       cleanupFieldMetaDerived()
       cleanupStoreDerived()
+
+      // broadcast form unmount for devtools
+      formEventClient.emit('broadcast-form-unmounted', {
+        id: this._formId,
+      })
     }
 
     this.options.listeners?.onMount?.({ formApi: this })
 
     const { onMount } = this.options.validators || {}
-    if (!onMount) return cleanup
-    this.validateSync('mount')
 
+    // broadcast form state for devtools on mounting
+    formEventClient.emit('broadcast-form-state', {
+      id: this._formId,
+      state: this.store.state,
+      options: this.options,
+    })
+
+    // if no validation skip
+    if (!onMount) return cleanup
+
+    // validate
+    this.validateSync('mount')
     return cleanup
   }
 
@@ -1915,7 +2002,7 @@ export class FormApi<
       )
     })
 
-    if (!this.state.canSubmit) return
+    if (!this.state.canSubmit && !this._devtoolsSubmissionOverride) return
 
     const submitMetaArg =
       submitMeta ?? (this.options.onSubmitMeta as TSubmitMeta)
@@ -1930,10 +2017,21 @@ export class FormApi<
 
     if (!this.state.isFieldsValid) {
       done()
+
       this.options.onSubmitInvalid?.({
         value: this.state.values,
         formApi: this,
         meta: submitMetaArg,
+      })
+
+      formEventClient.emit('broadcast-form-submission-state', {
+        id: this._formId,
+        submissionAttempt: this.state.submissionAttempts,
+        successful: false,
+        stage: 'validateAllFields',
+        errors: (Object.values(this.state.fieldMeta) as AnyFieldMeta[])
+          .map((meta: AnyFieldMeta) => meta.errors)
+          .flat(),
       })
       return
     }
@@ -1943,11 +2041,21 @@ export class FormApi<
     // Fields are invalid, do not submit
     if (!this.state.isValid) {
       done()
+
       this.options.onSubmitInvalid?.({
         value: this.state.values,
         formApi: this,
         meta: submitMetaArg,
       })
+
+      formEventClient.emit('broadcast-form-submission-state', {
+        id: this._formId,
+        submissionAttempt: this.state.submissionAttempts,
+        successful: false,
+        stage: 'validate',
+        errors: this.state.errors,
+      })
+
       return
     }
 
@@ -1978,6 +2086,13 @@ export class FormApi<
           isSubmitted: true,
           isSubmitSuccessful: true, // Set isSubmitSuccessful to true on successful submission
         }))
+
+        formEventClient.emit('broadcast-form-submission-state', {
+          id: this._formId,
+          submissionAttempt: this.state.submissionAttempts,
+          successful: true,
+        })
+
         done()
       })
     } catch (err) {
@@ -1985,7 +2100,17 @@ export class FormApi<
         ...prev,
         isSubmitSuccessful: false, // Ensure isSubmitSuccessful is false if an error occurs
       }))
+
+      formEventClient.emit('broadcast-form-submission-state', {
+        id: this._formId,
+        submissionAttempt: this.state.submissionAttempts,
+        successful: false,
+        stage: 'inflight',
+        onError: err,
+      })
+
       done()
+
       throw err
     }
   }
