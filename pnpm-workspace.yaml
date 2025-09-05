@@ -61,3 +61,10 @@ catalog:
   zod: ^3.25.76
 overrides:
   cssstyle: 4.6.0
+catalogs:
+  conflicts_solid-js_h1_9_9:
+    solid-js: ^1.9.9
+  conflicts_vite_h7_1_3:
+    vite: ^7.1.3
+  conflicts_vite-plugin-solid_h2_11_8:
+    vite-plugin-solid: ^2.11.8

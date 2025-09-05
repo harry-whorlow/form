@@ -1,19 +1,18 @@
+import { useEffect, useRef } from 'react'
 import { TanstackFormDevtoolsPanel } from '@tanstack/form-devtools'
-import { useEffect, useRef, useState } from 'react'
 
 export function FormDevtools(): React.ReactElement | null {
-  const [devtools] = useState(new TanstackFormDevtoolsPanel())
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (ref.current) {
-      devtools.mount(ref.current)
-    }
+    if (!ref.current) return
+    const devtools = new TanstackFormDevtoolsPanel()
+    devtools.mount(ref.current)
 
     return () => {
       devtools.unmount()
     }
-  }, [devtools])
+  }, [])
 
   return <div style={{ height: '100%' }} ref={ref}></div>
 }
