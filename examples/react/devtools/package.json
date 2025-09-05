@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-devtools": "0.4.3",
-    "@tanstack/react-form": "^1.19.2",
+    "@tanstack/react-form": "^1.19.3",
     "@tanstack/react-form-devtools": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
