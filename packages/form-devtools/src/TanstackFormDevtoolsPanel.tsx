@@ -7,7 +7,6 @@ class TanstackFormDevtoolsPanel {
   #isMounted = false
   #dispose?: () => void
 
-  // constructor(config: TanstackFormDevtoolsPanelConfig) {}
   constructor() {}
 
   mount<T extends HTMLElement>(el: T) {

@@ -65,7 +65,6 @@ export type EventClientEventNames = ExtractEventNames<EventClientEventMap>
 class FormEventClient extends EventClient<EventMap> {
   constructor() {
     super({
-      // debug: true,
       pluginId: 'form-devtools',
     })
   }
