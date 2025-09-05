@@ -34,10 +34,6 @@
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
-      "solid": {
-        "types": "./dist/source/index.d.ts",
-        "default": "./dist/source/index.jsx"
-      },
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
