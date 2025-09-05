@@ -1280,18 +1280,16 @@ export class FormApi<
     this.update(opts || {})
 
     this.store.subscribe(() => {
-      formEventClient.emit('broadcast-form-state', {
+      formEventClient.emit('form-state-change', {
         id: this._formId,
         state: this.store.state,
         options: this.options,
       })
     })
 
-    formEventClient.on('request-form-state', (_e) => {
-      const e = _e.payload as unknown as RequestFormState
-
-      if (e.id === this._formId) {
-        formEventClient.emit('broadcast-form-state', {
+    formEventClient.on('request-form-state', (e) => {
+      if (e.payload.id === this._formId) {
+        formEventClient.emit('form-state-change', {
           id: this._formId,
           state: this.store.state,
           options: this.options,
@@ -1299,18 +1297,14 @@ export class FormApi<
       }
     })
 
-    formEventClient.on('request-form-reset', (_e) => {
-      const e = _e.payload as unknown as RequestFormReset
-
-      if (e.id === this._formId) {
+    formEventClient.on('request-form-reset', (e) => {
+      if (e.payload.id === this._formId) {
         this.reset()
       }
     })
 
-    formEventClient.on('request-form-force-submit', (_e) => {
-      const e = _e.payload as unknown as RequestFormForceReset
-
-      if (e.id === this._formId) {
+    formEventClient.on('request-form-force-submit', (e) => {
+      if (e.payload.id === this._formId) {
         this._devtoolsSubmissionOverride = true
         this.handleSubmit()
         this._devtoolsSubmissionOverride = false
@@ -1355,7 +1349,7 @@ export class FormApi<
       cleanupStoreDerived()
 
       // broadcast form unmount for devtools
-      formEventClient.emit('broadcast-form-unmounted', {
+      formEventClient.emit('form-unmounted', {
         id: this._formId,
       })
     }
@@ -1365,7 +1359,7 @@ export class FormApi<
     const { onMount } = this.options.validators || {}
 
     // broadcast form state for devtools on mounting
-    formEventClient.emit('broadcast-form-state', {
+    formEventClient.emit('form-state-change', {
       id: this._formId,
       state: this.store.state,
       options: this.options,
@@ -2024,7 +2018,7 @@ export class FormApi<
         meta: submitMetaArg,
       })
 
-      formEventClient.emit('broadcast-form-submission-state', {
+      formEventClient.emit('form-submission-state-change', {
         id: this._formId,
         submissionAttempt: this.state.submissionAttempts,
         successful: false,
@@ -2048,7 +2042,7 @@ export class FormApi<
         meta: submitMetaArg,
       })
 
-      formEventClient.emit('broadcast-form-submission-state', {
+      formEventClient.emit('form-submission-state-change', {
         id: this._formId,
         submissionAttempt: this.state.submissionAttempts,
         successful: false,
@@ -2087,7 +2081,7 @@ export class FormApi<
           isSubmitSuccessful: true, // Set isSubmitSuccessful to true on successful submission
         }))
 
-        formEventClient.emit('broadcast-form-submission-state', {
+        formEventClient.emit('form-submission-state-change', {
           id: this._formId,
           submissionAttempt: this.state.submissionAttempts,
           successful: true,
@@ -2101,7 +2095,7 @@ export class FormApi<
         isSubmitSuccessful: false, // Ensure isSubmitSuccessful is false if an error occurs
       }))
 
-      formEventClient.emit('broadcast-form-submission-state', {
+      formEventClient.emit('form-submission-state-change', {
         id: this._formId,
         submissionAttempt: this.state.submissionAttempts,
         successful: false,

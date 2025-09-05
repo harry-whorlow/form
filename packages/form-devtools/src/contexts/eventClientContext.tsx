@@ -7,10 +7,7 @@ import type { ParentComponent } from 'solid-js'
 import type {
   AnyFormOptions,
   AnyFormState,
-  BroadcastFormState,
   BroadcastFormSubmissionState,
-  BroadcastFormUnmounted,
-  EventClientEventNames,
 } from '@tanstack/form-core'
 import type { Dayjs } from 'dayjs'
 
@@ -41,12 +38,7 @@ function useProviderValue() {
   const [store, setStore] = createStore<DevtoolsState>(devtoolsStateInit)
 
   createEffect(() => {
-    const cleanup = formEventClient.on('broadcast-form-state', (_e) => {
-      const e = _e as unknown as {
-        type: EventClientEventNames
-        payload: BroadcastFormState
-      }
-
+    const cleanup = formEventClient.on('form-state-change', (e) => {
       setStore('formState', (prev) => {
         const existing = prev.find((item) => item.id === e.payload.id)
 
@@ -80,40 +72,27 @@ function useProviderValue() {
   })
 
   createEffect(() => {
-    const cleanup = formEventClient.on(
-      'broadcast-form-submission-state',
-      (_e) => {
-        const e = _e as unknown as {
-          type: EventClientEventNames
-          payload: BroadcastFormSubmissionState
-        }
+    const cleanup = formEventClient.on('form-submission-state-change', (e) => {
+      setStore('formState', (prev) =>
+        prev.map((item) => {
+          if (item.id !== e.payload.id) return item
 
-        setStore('formState', (prev) =>
-          prev.map((item) => {
-            if (item.id !== e.payload.id) return item
+          const { id, ...rest } = e.payload
+          const newHistory = [rest, ...item.history].slice(0, 5)
 
-            const { id, ...rest } = e.payload
-            const newHistory = [rest, ...item.history].slice(0, 5)
-
-            return {
-              ...item,
-              history: newHistory,
-            }
-          }),
-        )
-      },
-    )
+          return {
+            ...item,
+            history: newHistory,
+          }
+        }),
+      )
+    })
 
     onCleanup(() => cleanup())
   })
 
   createEffect(() => {
-    const cleanup = formEventClient.on('broadcast-form-unmounted', (_e) => {
-      const e = _e as unknown as {
-        type: EventClientEventNames
-        payload: BroadcastFormUnmounted
-      }
-
+    const cleanup = formEventClient.on('form-unmounted', (e) => {
       setStore('formState', (prev) =>
         prev.filter((item) => item.id !== e.payload.id),
       )

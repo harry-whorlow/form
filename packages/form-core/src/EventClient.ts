@@ -50,9 +50,9 @@ export type RequestFormForceReset = {
 }
 
 type EventMap = {
-  'form-devtools:broadcast-form-state': BroadcastFormState
-  'form-devtools:broadcast-form-submission-state': BroadcastFormSubmissionState
-  'form-devtools:broadcast-form-unmounted': BroadcastFormUnmounted
+  'form-devtools:form-state-change': BroadcastFormState
+  'form-devtools:form-submission-state-change': BroadcastFormSubmissionState
+  'form-devtools:form-unmounted': BroadcastFormUnmounted
   'form-devtools:request-form-state': RequestFormState
   'form-devtools:request-form-reset': RequestFormReset
   'form-devtools:request-form-force-submit': RequestFormForceReset
