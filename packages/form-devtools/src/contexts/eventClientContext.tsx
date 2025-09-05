@@ -14,7 +14,7 @@ import type {
 } from '@tanstack/form-core'
 import type { Dayjs } from 'dayjs'
 
-export type BroadcastFormSubmissionStateWithoutId =
+type BroadcastFormSubmissionStateWithoutId =
   BroadcastFormSubmissionState extends infer T
     ? T extends any
       ? Omit<T, 'id'>
@@ -125,7 +125,7 @@ function useProviderValue() {
   return { store }
 }
 
-export type ContextType = ReturnType<typeof useProviderValue>
+type ContextType = ReturnType<typeof useProviderValue>
 
 const FormEventClientContext = createContext<ContextType | undefined>(undefined)
 
