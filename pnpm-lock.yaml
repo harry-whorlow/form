@@ -1121,7 +1121,7 @@ importers:
   packages/form-core:
     dependencies:
       '@tanstack/devtools-event-client':
-        specifier: ^0.2.2
+        specifier: ^0.2.3
         version: 0.2.3
       '@tanstack/store':
         specifier: ^0.7.4

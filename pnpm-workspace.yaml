@@ -68,3 +68,5 @@ catalogs:
     vite: ^7.1.3
   conflicts_vite-plugin-solid_h2_11_8:
     vite-plugin-solid: ^2.11.8
+  conflicts_@tanstack/devtools-event-client_h0_2_3:
+    '@tanstack/devtools-event-client': ^0.2.3
