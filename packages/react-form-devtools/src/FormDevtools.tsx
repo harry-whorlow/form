@@ -1,18 +1,21 @@
-import { useEffect, useRef } from 'react'
 import { FormDevtoolsCore } from '@tanstack/form-devtools'
+import { useEffect, useRef, useState } from 'react'
 
-export function FormDevtools(): React.ReactElement | null {
-  const ref = useRef<HTMLDivElement>(null)
+export interface FormDevtoolsReactProps {
+  theme?: 'light' | 'dark'
+}
+
+export const FormDevtools = (props?: FormDevtoolsReactProps) => {
+  const devToolRef = useRef<HTMLDivElement>(null)
+  const [devtools] = useState(() => new FormDevtoolsCore({}))
 
   useEffect(() => {
-    if (!ref.current) return
-    const devtools = new FormDevtoolsCore()
-    devtools.mount(ref.current)
-
-    return () => {
-      devtools.unmount()
+    if (devToolRef.current) {
+      devtools.mount(devToolRef.current, props?.theme ?? 'dark')
     }
-  }, [])
 
-  return <div style={{ height: '100%' }} ref={ref}></div>
+    return () => devtools.unmount()
+  }, [devtools, props?.theme])
+
+  return <div style={{ height: '100%' }} ref={devToolRef} />
 }
