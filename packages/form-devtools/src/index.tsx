@@ -1,1 +1,1 @@
-export * from './TanstackFormDevtoolsPanel'
+export * from './core'

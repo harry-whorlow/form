@@ -1,9 +1,9 @@
 import { render } from 'solid-js/web'
 import { Devtools } from './components'
 
-export interface TanstackFormDevtoolsPanelConfig {}
+export interface FormDevtoolsInit {}
 
-class TanstackFormDevtoolsPanel {
+class FormDevtoolsCore {
   #isMounted = false
   #dispose?: () => void
 
@@ -29,4 +29,4 @@ class TanstackFormDevtoolsPanel {
   }
 }
 
-export { TanstackFormDevtoolsPanel }
+export { FormDevtoolsCore }
