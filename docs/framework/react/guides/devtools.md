@@ -32,7 +32,7 @@ createRoot(document.getElementById('root')!).render(
 Import the `FormDevtools` form **TanStack Form** and provide it to the `TanstackDevtools` component along with a label for the menu.
 
 ```tsx
-import { FormDevtools } from '@tanstack/react-form'
+import { FormDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
 
 import App from './App'
@@ -41,14 +41,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
 
-    <TanstackDevtools
-      plugins={[
-        {
-          name: 'Tanstack Form',
-          render: <FormDevtools />,
-        },
-      ]}
-    />
+    <TanstackDevtools plugins={[FormDevtoolsPlugin()]} />
   </StrictMode>,
 )
 ```
