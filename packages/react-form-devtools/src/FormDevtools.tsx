@@ -1,7 +1,7 @@
 import { FormDevtoolsCore } from '@tanstack/form-devtools'
 import { useEffect, useRef, useState } from 'react'
 
-export interface FormDevtoolsReactProps {
+interface FormDevtoolsReactProps {
   theme?: 'light' | 'dark'
 }
 
