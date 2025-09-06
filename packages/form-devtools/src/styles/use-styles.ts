@@ -13,7 +13,7 @@ const stylesFactory = (theme: 'light' | 'dark') => {
     mainContainer: css`
       display: flex;
       flex: 1;
-      min-height: 100%;
+      min-height: 80%;
       overflow: hidden;
       padding: ${size[2]};
     `,

@@ -7,13 +7,14 @@ TanStack Form comes with a ready to go suit of devtools.
 
 ## Setup
 
-Install the [TanStack Devtools](https://tanstack.com/devtools/) library, this will install the devtools core as well as provide you framework specific adapters.
+Install the [TanStack Devtools](https://tanstack.com/devtools/latest/docs/quick-start) library and the [TanStack Form plugin](http://npmjs.com/package/@tanstack/react-form-devtools), from the framework adapter that your working in (in this case `@tanstack/react-devtools`, and `@tanstack/react-form-devtools`).
 
 ```bash
-npm i @tanstack/devtools
+npm i @tanstack/react-devtools
+npm i @tanstack/react-form-devtools
 ```
 
-Next in the root of your application import the `TanstackDevtools` from the required framework adapter (in this case @tanstack/react-devtools).
+Next in the root of your application import the `TanstackDevtools`.
 
 ```tsx
 import { TanstackDevtools } from '@tanstack/react-devtools'
@@ -29,11 +30,11 @@ createRoot(document.getElementById('root')!).render(
 )
 ```
 
-Import the `FormDevtools` form **TanStack Form** and provide it to the `TanstackDevtools` component along with a label for the menu.
+Import the `FormDevtoolsPlugin` from **TanStack Form** and provide it to the `TanstackDevtools` component.
 
 ```tsx
-import { FormDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
+import { FormDevtoolsPlugin } from '@tanstack/react-form-devtools'
 
 import App from './App'
 
