@@ -1,4 +1,5 @@
 import { createSignal, onCleanup, onMount } from 'solid-js'
+import { Header, HeaderLogo, MainPanel } from '@tanstack/devtools-ui'
 import { useStyles } from '../styles/use-styles'
 import { UtilList } from './UtilList'
 import { DetailsPanel } from './DetailsPanel'
@@ -49,8 +50,12 @@ export function Shell() {
   })
 
   return (
-    <div class={styles().devtoolsPanel}>
-      <div class={styles().stickyHeader}>TanStack Form</div>
+    <MainPanel>
+      <Header>
+        <HeaderLogo flavor={{ light: '#eeaf00', dark: '#eeaf00' }}>
+          TanStack Form
+        </HeaderLogo>
+      </Header>
 
       <div class={styles().mainContainer}>
         <div
@@ -74,6 +79,6 @@ export function Shell() {
           <DetailsPanel selectedKey={selectedKey} />
         </div>
       </div>
-    </div>
+    </MainPanel>
   )
 }

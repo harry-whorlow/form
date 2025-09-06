@@ -10,40 +10,12 @@ const stylesFactory = (theme: 'light' | 'dark') => {
   const t = (light: string, dark: string) => (theme === 'light' ? light : dark)
 
   return {
-    devtoolsPanel: css`
-      background: ${t(colors.gray[50], colors.darkGray[700])}
-      color: ${colors.gray[100]};
-      font-family: ${fontFamily.sans};
-      font-size: ${fontSize.sm};
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    `,
-    stickyHeader: css`
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: ${t(colors.gray[50], colors.darkGray[700])}
-      padding: ${size[2]};
-      font-size: ${fontSize.lg};
-      font-weight: ${font.weight.bold};
-      color: #eeaf00;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      border-bottom:  1px solid ${t(colors.gray[300], colors.gray[700])};
-      box-shadow: 0 2px 8px 0 ${colors.black + alpha[40]};
-      flex-shrink: 0;
-    `,
     mainContainer: css`
       display: flex;
       flex: 1;
-      min-height: 0;
+      min-height: 100%;
       overflow: hidden;
       padding: ${size[2]};
-      padding-top: 0;
     `,
     dragHandle: css`
       width: 8px;
